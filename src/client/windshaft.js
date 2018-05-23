@@ -337,13 +337,28 @@ export default class Windshaft {
                 sample: SAMPLE_ROWS // TDDO: sample without geometry
             };
         }
-        const response = await fetch(endpoint(conf), this._getRequestConfig(mapConfigAgg));
-        const layergroup = await response.json();
-        this._subdomains = layergroup.cdn_url ? layergroup.cdn_url.templates.https.subdomains : [];
-        return {
-            url: getLayerUrl(layergroup, LAYER_INDEX, conf),
-            metadata: overrideMetadata || this._adaptMetadata(layergroup.metadata.layers[0].meta)
-        };
+        let response;
+        try {
+            const url = endpoint(conf);
+            console.log(url);
+            response = await fetch(url, this._getRequestConfig(mapConfigAgg));
+        } catch (e) {
+            console.log(1111);
+            console.warn(e);
+            throw e;
+        }
+        console.log(response.status);
+        let layergroup;
+        try {
+            layergroup = await response.json();
+            this._subdomains = layergroup.cdn_url ? layergroup.cdn_url.templates.https.subdomains : [];
+            return {
+                url: getLayerUrl(layergroup, LAYER_INDEX, conf),
+                metadata: overrideMetadata || this._adaptMetadata(layergroup.metadata.layers[0].meta)
+            };
+        } catch (e) {
+            console.warn(3, e, layergroup);
+        }
     }
 
     _getRequestConfig(mapConfigAgg) {

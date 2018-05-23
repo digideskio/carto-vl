@@ -45,13 +45,13 @@
 
     // Define user
     carto.setDefaultAuth({
-      user: 'cartovl',
+      user: 'cartoval',
       apiKey: 'default_public'
     });
 
     // Define layer
     const source = new carto.source.Dataset('ne_10m_populated_places_simple');
-    const viz = new carto.Viz();
+    const viz = new carto.Viz(`width: $wadus`);
     const layer = new carto.Layer('layer', source, viz);
 
     layer.addTo(map, 'watername_ocean');
